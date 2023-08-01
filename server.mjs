@@ -21,6 +21,10 @@ let productsCollection;
   }
 })();
 
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
 
 app.get("/products", async (req, res) => {
   try {

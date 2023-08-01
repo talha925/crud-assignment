@@ -3,7 +3,7 @@ import { MongoClient } from "mongodb";
 import { customAlphabet } from 'nanoid';
 const nanoid = customAlphabet('1234567890', 20);
 
-const mongodbURI = "mongodb+srv://talha1:talha1@cluster0.nxgymft.mongodb.net/?retryWrites=true&w=majority"
+const mongodbURI = "mongodb+srv://dbuser:dbpass@cluster0.wy0j9mw.mongodb.net/?retryWrites=true&w=majority";
 
 const app = express();
 app.use(express.json());

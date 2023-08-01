@@ -3,13 +3,14 @@ import { MongoClient } from "mongodb";
 import { customAlphabet } from 'nanoid';
 const nanoid = customAlphabet('1234567890', 20);
 
-const mongodbURI = "mongodb+srv://dbuser:dbpass@cluster0.wy0j9mw.mongodb.net/?retryWrites=true&w=majority";
+const mongodbURI = "mongodb+srv://talha1:talha1@cluster0.nxgymft.mongodb.net/?retryWrites=true&w=majority"
+
 const app = express();
 app.use(express.json());
 
 let productsCollection;
 
-(async () => {
+const connectDB = async () => {
   try {
     const client = new MongoClient(mongodbURI);
     await client.connect();
@@ -18,13 +19,21 @@ let productsCollection;
     console.log("Connected to MongoDB");
   } catch (error) {
     console.log("Error connecting to MongoDB:", error);
+    process.exit(1);
   }
-})();
+};
+
+// Connect to the database before starting the server
+connectDB().then(() => {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+  });
+});
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
+  res.send('All Products!')
+});
 
 app.get("/products", async (req, res) => {
   try {
@@ -36,26 +45,6 @@ app.get("/products", async (req, res) => {
   } catch (error) {
     res.status(500).send({
       message: "Error fetching products",
-    });
-  }
-});
-
-app.get("/product/:id", async (req, res) => {
-  try {
-    const product = await productsCollection.findOne({ id: req.params.id });
-    if (!product) {
-      res.status(404).send({
-        message: "Product not found",
-      });
-    } else {
-      res.send({
-        message: "Product found with id: " + product.id,
-        data: product,
-      });
-    }
-  } catch (error) {
-    res.status(500).send({
-      message: "Error fetching product",
     });
   }
 });
@@ -125,9 +114,4 @@ app.delete("/product/:id", async (req, res) => {
       message: "Error deleting product",
     });
   }
-});
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
 });
